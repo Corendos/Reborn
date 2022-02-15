@@ -158,6 +158,21 @@ typedef double f64;
 #define single_linked_list_stack_push(last_node, new_node) (new_node)->next = (last_node), (last_node) = (new_node)
 #define single_linked_list_stack_pop(last_node)            (last_node) = (last_node)->next
 
+#define doubly_linked_list_push(list, new_node)                                                                        \
+    do {                                                                                                               \
+        if ((list)->first == 0) {                                                                                      \
+            (list)->first = (new_node);                                                                                \
+        }                                                                                                              \
+        if ((list)->last == 0) {                                                                                       \
+            (list)->last = (new_node);                                                                                 \
+        } else {                                                                                                       \
+            (new_node)->prev = (list)->last;                                                                           \
+            (list)->last->next = (new_node);                                                                           \
+            (list)->last = (new_node);                                                                                 \
+        }                                                                                                              \
+        (list)->count++;                                                                                               \
+    } while (0)
+
 inline static bool is_power_of_two(u64 number) { return (number & (number - 1)) == 0; }
 
 inline static u64 align_to(u64 value, u8 alignment) {
@@ -169,6 +184,11 @@ inline static u64 align_to(u64 value, u8 alignment) {
 }
 
 inline static bool is_aligned_to(u64 value, u8 alignment) { return value % alignment == 0; }
+
+#define _STRINGIFY(s) #s
+#define STRINGIFY(s)  _STRINGIFY(s)
+#define GLUE_(x, y)   x##y
+#define CONCAT(x, y)  GLUE_(x, y)
 
 #define STATEMENT(s)                                                                                                   \
     do {                                                                                                               \
@@ -198,4 +218,34 @@ inline static bool is_aligned_to(u64 value, u8 alignment) { return value % align
 #endif
 #define internal static
 
+#define DECLARE_ARRAY(name, type)                                                                                      \
+    struct name {                                                                                                      \
+        type* items;                                                                                                   \
+        u64 count;                                                                                                     \
+    }
+
+#define DECLARE_LIST(name, type)                                                                                       \
+    struct CONCAT(name, Node) {                                                                                        \
+        CONCAT(name, Node) * next;                                                                                     \
+        CONCAT(name, Node) * prev;                                                                                     \
+        type value;                                                                                                    \
+    };                                                                                                                 \
+                                                                                                                       \
+    struct name {                                                                                                      \
+        CONCAT(name, Node) * first;                                                                                    \
+        CONCAT(name, Node) * last;                                                                                     \
+        u64 count;                                                                                                     \
+    }
+
+DECLARE_ARRAY(ArrayU8, u8);
+DECLARE_ARRAY(ArrayU16, u16);
+DECLARE_ARRAY(ArrayU32, u32);
+DECLARE_ARRAY(ArrayU64, u64);
+DECLARE_ARRAY(ArrayI8, i8);
+DECLARE_ARRAY(ArrayI16, i16);
+DECLARE_ARRAY(ArrayI32, i32);
+DECLARE_ARRAY(ArrayI64, i64);
+
+DECLARE_LIST(ListU64, u64);
+DECLARE_LIST(ListI64, i64);
 #endif // REBORN_TYPES_H

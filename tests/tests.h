@@ -14,10 +14,6 @@
 #include <cstdlib>
 #include <cstring>
 
-#define _STRINGIFY(s) #s
-#define STRINGIFY(s)  _STRINGIFY(s)
-#define CONCAT(a, b)  a##b
-
 #define GREEN_OUTPUT                                                                                                   \
     "\x1b\x5b"                                                                                                         \
     "32m"
