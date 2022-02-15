@@ -183,6 +183,61 @@ StringU32 copy_string(Allocator* allocator, StringU32 other) {
     return push_string_u32(allocator, other.data, other.size);
 }
 
+ConstStringU8 substring(ConstStringU8 str, u64 offset, i64 size) {
+    u64 real_offset = min(offset, str.size);
+    u64 real_size;
+    if (size < 0) {
+        real_size = str.size - real_offset;
+    } else {
+        real_size = min(str.size, real_offset + size) - real_offset;
+    }
+    return make_const_string(str.data + real_offset, real_size);
+}
+
+ConstStringU16 substring(ConstStringU16 str, u64 offset, i64 size) {
+    u64 real_offset = min(offset, str.size);
+    u64 real_size;
+    if (size < 0) {
+        real_size = str.size - real_offset;
+    } else {
+        real_size = min(str.size, real_offset + size) - real_offset;
+    }
+    return make_const_string(str.data + real_offset, real_size);
+}
+
+ConstStringU32 substring(ConstStringU32 str, u64 offset, i64 size) {
+    u64 real_offset = min(offset, str.size);
+    u64 real_size;
+    if (size < 0) {
+        real_size = str.size - real_offset;
+    } else {
+        real_size = min(str.size, real_offset + size) - real_offset;
+    }
+    return make_const_string(str.data + real_offset, real_size);
+}
+
+ConstStringU8ListNode* _push_const_string_list_node(Allocator* allocator, ConstStringU8 other) {
+    u64 allocation_size = sizeof(ConstStringU8ListNode) + other.size + 1;
+    u8* storage = (u8*)allocate(allocator, allocation_size);
+
+    ConstStringU8ListNode* node = (ConstStringU8ListNode*)storage;
+    node->next = 0;
+    node->prev = 0;
+
+    char* data = (char*)(storage + sizeof(ConstStringU8ListNode));
+    memcpy(data, other.data, other.size);
+    data[other.size] = 0;
+
+    node->string = make_const_string(data, other.size);
+
+    return node;
+}
+
+void push_const_string_list_node(Allocator* allocator, ConstStringU8List* list, ConstStringU8 other) {
+    ConstStringU8ListNode* new_node = _push_const_string_list_node(allocator, other);
+    doubly_linked_list_push(list, new_node);
+}
+
 void clear_string(StringU8* str) { str->size = 0; }
 
 void clear_string(StringU16* str) { str->size = 0; }
@@ -791,3 +846,161 @@ bool is_valid(Utf8Iterator* it) { return it->position != it->string.size; }
 bool is_valid(Utf16Iterator* it) { return it->position != it->string.size; }
 
 bool is_valid(Utf32Iterator* it) { return it->position != it->string.size; }
+
+i64 find_first(ConstStringU8 str, ConstStringU8 separator) {
+    i64 limit = str.size - separator.size;
+    if (limit < 0) return -1;
+
+    for (u64 i = 0; i <= limit; ++i) {
+        ConstStringU8 candidate = substring(str, i, separator.size);
+        if (string_compare(candidate, separator) == 0) return i;
+    }
+
+    return -1;
+}
+
+i64 find_last(ConstStringU8 str, ConstStringU8 separator) {
+    i64 limit = str.size - separator.size;
+    if (limit < 0) return -1;
+
+    for (u64 i = 0; i <= limit; ++i) {
+        u64 start = limit - i;
+        ConstStringU8 candidate = substring(str, start, separator.size);
+        if (string_compare(candidate, separator) == 0) return start;
+    }
+
+    return -1;
+}
+
+i64 find_next(ConstStringU8 str, ConstStringU8 separator, i64 old_result) {
+    i64 start = old_result;
+    if (start < 0)
+        start = 0;
+    else
+        start += 1;
+
+    i64 result = find_first(substring(str, start), separator);
+    if (result == -1) return result;
+    return result + start;
+}
+
+i64 find_previous(ConstStringU8 str, ConstStringU8 separator, i64 old_result) {
+    i64 limit = 0;
+    if (old_result < 0)
+        limit = 0;
+    else
+        limit = min(str.size, old_result);
+
+    i64 result = find_last(substring(str, 0, limit), separator);
+    return result;
+}
+
+ListU64 find_all(Allocator* allocator, ConstStringU8 str, ConstStringU8 separator) {
+    ListU64 result = {0};
+
+    i64 find_result = find_next(str, separator);
+    while (find_result != -1) {
+        ListU64Node* new_node = (ListU64Node*)allocate(allocator, sizeof(ListU64Node));
+        new_node->next = 0;
+        new_node->prev = 0;
+        new_node->value = (u64)find_result;
+
+        doubly_linked_list_push(&result, new_node);
+        find_result = find_next(str, separator, find_result);
+    }
+
+    return result;
+}
+
+ConstStringU8List split_string(Allocator* allocator, ConstStringU8 str, ConstStringU8 separator) {
+    if (str.size == 0) return {0};
+
+    ConstStringU8List result = {0};
+
+    i64 old_result = 0;
+    i64 find_result = find_next(str, separator);
+    while (find_result != -1) {
+        push_const_string_list_node(allocator, &result, substring(str, old_result, find_result - old_result));
+
+        old_result = find_result + separator.size;
+        find_result = find_next(str, separator, old_result);
+    }
+
+    push_const_string_list_node(allocator, &result, substring(str, old_result));
+
+    return result;
+}
+
+ConstStringU8 join_string(Allocator* allocator, ConstStringU8Array strings, ConstStringU8 separator) {
+    if (strings.count == 0) return SCu8("");
+
+    u64 total_size = (strings.count - 1) * separator.size;
+    for (u64 i = 0; i < strings.count; ++i) {
+        ConstStringU8* str = strings.values + i;
+        total_size += str->size;
+    }
+
+    StringU8 result = push_string_u8(allocator, total_size);
+    for (u64 i = 0; i < strings.count; ++i) {
+        ConstStringU8* str = strings.values + i;
+        write_to(&result, *str);
+        if (i < strings.count - 1) {
+            write_to(&result, separator);
+        }
+    }
+
+    return make_const_string(result);
+}
+
+ConstStringU8Array split_string(Allocator* allocator, Arena* temporary_arena, ConstStringU8 str,
+                                ConstStringU8 separator) {
+    Allocator temporary_allocator = make_temporary_arena_allocator(temporary_arena);
+
+    ConstStringU8Array result = {0};
+
+    ConstStringU8List temporary_result = split_string(&temporary_allocator, str, separator);
+    result.count = temporary_result.count;
+    result.values = (ConstStringU8*)allocate(allocator, result.count * sizeof(ConstStringU8));
+    ConstStringU8ListNode* current = temporary_result.first;
+    for (usize i = 0; i < result.count; ++i) {
+        result.values[i] = copy_const_string(allocator, current->string);
+        current = current->next;
+    }
+
+    destroy_temporary_arena_allocator(&temporary_allocator);
+
+    return result;
+}
+
+ConstStringU8 trim_begin(Allocator* allocator, ConstStringU8 str) {
+    u64 new_start = 0;
+
+    while (new_start < str.size) {
+        if (str.data[new_start] != ' ') break;
+        new_start++;
+    }
+
+    return copy_const_string(allocator, substring(str, new_start));
+}
+
+ConstStringU8 trim_end(Allocator* allocator, ConstStringU8 str) {
+    u64 new_start_from_end = 0;
+
+    while (new_start_from_end < str.size) {
+        if (str.data[str.size - new_start_from_end] != ' ') break;
+        new_start_from_end++;
+    }
+
+    return copy_const_string(allocator, substring(str, 0, str.size - new_start_from_end));
+}
+
+ConstStringU8 trim_all(Allocator* allocator, ConstStringU8 str) {
+    u64 new_start = 0;
+
+    while (new_start < str.size) {
+        if (str.data[new_start] != ' ') break;
+        new_start++;
+    }
+
+    return trim_end(allocator, substring(str, new_start));
+}

@@ -9,7 +9,7 @@
 #include "filesystem/all.cpp"
 #include "iterator_tests.cpp"
 #include "memory_tests.cpp"
-#include "strings_tests.cpp"
+#include "strings/all.cpp"
 #include "types_tests.cpp"
 
 SECTION(reborn) {

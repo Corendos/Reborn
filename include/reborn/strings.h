@@ -51,6 +51,18 @@ struct ConstStringU8Array {
     u64 count;
 };
 
+struct ConstStringU8ListNode {
+    ConstStringU8ListNode* next;
+    ConstStringU8ListNode* prev;
+    ConstStringU8 string;
+};
+
+struct ConstStringU8List {
+    ConstStringU8ListNode* first;
+    ConstStringU8ListNode* last;
+    u64 count;
+};
+
 struct StringU8 {
     char* data;
     u64 size;
@@ -161,6 +173,13 @@ StringU8 copy_string(Allocator* allocator, StringU8 other);
 StringU16 copy_string(Allocator* allocator, StringU16 other);
 StringU32 copy_string(Allocator* allocator, StringU32 other);
 
+ConstStringU8 substring(ConstStringU8 str, u64 offset, i64 size = -1);
+ConstStringU16 substring(ConstStringU16 str, u64 offset, i64 size = -1);
+ConstStringU32 substring(ConstStringU32 str, u64 offset, i64 size = -1);
+
+ConstStringU8ListNode* _push_const_string_list_node(Allocator* allocator, ConstStringU8 other);
+void push_const_string_list_node(Allocator* allocator, ConstStringU8List* list, ConstStringU8 other);
+
 void clear_string(StringU8* str);
 void clear_string(StringU16* str);
 void clear_string(StringU32* str);
@@ -252,6 +271,20 @@ u32 get_codepoint_and_advance(Utf32Iterator* it);
 bool is_valid(Utf8Iterator* it);
 bool is_valid(Utf16Iterator* it);
 bool is_valid(Utf32Iterator* it);
+
+i64 find_first(ConstStringU8 str, ConstStringU8 separator);
+i64 find_last(ConstStringU8 str, ConstStringU8 separator);
+i64 find_next(ConstStringU8 str, ConstStringU8 separator, i64 old_result = -1);
+i64 find_previous(ConstStringU8 str, ConstStringU8 separator, i64 old_result = -1);
+ListU64 find_all(Allocator* allocator, ConstStringU8 str, ConstStringU8 separator);
+
+ConstStringU8List split_string(Allocator* allocator, ConstStringU8 str, ConstStringU8 separator);
+ConstStringU8Array split_string(Allocator* allocator, Arena* temporary_arena, ConstStringU8 str,
+                                ConstStringU8 separator);
+ConstStringU8 join_string(Allocator* allocator, ConstStringU8Array strings, ConstStringU8 separator);
+ConstStringU8 trim_begin(Allocator* allocator, ConstStringU8 str);
+ConstStringU8 trim_end(Allocator* allocator, ConstStringU8 str);
+ConstStringU8 trim_all(Allocator* allocator, ConstStringU8 str);
 
 // ****************************************************************************
 //                            Inline Functions
