@@ -30,6 +30,6 @@ Buffer push_buffer(Allocator* allocator, u64 size);
 void reset_buffer(Buffer* buffer);
 
 // NOTE(Corentin): Temporary
-void print_buffer_hex(ConstBuffer buffer);
+void print_buffer_hex(ConstBuffer buffer, Arena* temporary_arena);
 
 #endif // REBORN_MEMORY_BUFFER_H

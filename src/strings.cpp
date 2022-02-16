@@ -444,19 +444,15 @@ FormatResult format_to_v(StringU8* str, const char* format, va_list args) {
 
 i64 required_for_format(const char* format, va_list args) { return (i64)vsnprintf(0, 0, format, args); }
 
-StringBuilder make_string_builder() {
+StringBuilder make_string_builder(Arena* temporary) {
     StringBuilder builder = {0};
 
-    builder.arena = make_arena();
-    // builder.temporary_arena = linear_allocation_begin_temp(arena);
+    builder.allocator = make_temporary_arena_allocator(temporary);
 
     return builder;
 }
 
-void destroy_string_builder(StringBuilder* builder) {
-    destroy_arena(&builder->arena);
-    // linear_allocation_end_temp(&builder->temporary_arena);
-}
+void destroy_string_builder(StringBuilder* builder) { destroy_temporary_arena_allocator(&builder->allocator); }
 
 void format_to(StringBuilder* builder, const char* format, ...) {
     va_list args;
@@ -480,7 +476,7 @@ void format_to_v(StringBuilder* builder, const char* format, va_list args) {
     // TODO(Corentin): check for zero sized strings
     if (!builder->last || !result.success) {
         u64 required_buffer_size = max(512, (u64)result.required);
-        void* storage = linear_allocation_push(&builder->arena, required_buffer_size + sizeof(StringBuilderNode));
+        void* storage = allocate(&builder->allocator, required_buffer_size + sizeof(StringBuilderNode));
         StringBuilderNode* new_node = (StringBuilderNode*)storage;
         new_node->buffer = make_string_from((char*)storage + sizeof(StringBuilderNode), required_buffer_size);
 

@@ -40,18 +40,18 @@ Buffer push_buffer(Allocator* allocator, u64 size) {
 
 void reset_buffer(Buffer* buffer) { buffer->size = 0; }
 
-void print_buffer_hex(ConstBuffer buffer) {
-    StringBuilder builder = make_string_builder();
+void print_buffer_hex(ConstBuffer buffer, Arena* temporary_arena) {
+    StringBuilder builder = make_string_builder(temporary_arena);
 
     for (u64 i = 0; i < buffer.size; ++i) {
         format_to(&builder, "\\x%02X", buffer.data[i]);
     }
 
-    Allocator temp = make_arena_allocator();
+    Allocator temp = make_temporary_arena_allocator(temporary_arena);
     ConstStringU8 str = build(&temp, &builder);
 
     printf("%.*s\n", expand_string(str));
 
-    destroy_string_builder(&builder);
     destroy_arena_allocator(&temp);
+    destroy_string_builder(&builder);
 }

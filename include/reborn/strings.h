@@ -101,9 +101,7 @@ struct StringBuilder {
     StringBuilderNode* first;
     StringBuilderNode* last;
     u64 size;
-    Arena arena;
-    // TODO(Corentin): reimplement using temporary arena once ready
-    // TemporaryArena temporary_arena;
+    Allocator allocator;
 };
 
 struct Utf8Iterator {
@@ -219,7 +217,7 @@ FormatResult format_to_v(StringU8* str, const char* format, va_list args);
 
 i64 required_for_format(const char* format, va_list args);
 
-StringBuilder make_string_builder();
+StringBuilder make_string_builder(Arena* temporary);
 void destroy_string_builder(StringBuilder* builder);
 void format_to(StringBuilder* builder, const char* format, ...);
 void format_to_v(StringBuilder* builder, const char* format, va_list args);

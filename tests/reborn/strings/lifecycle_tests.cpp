@@ -404,6 +404,7 @@ TEST_CASE(substring_u16_2) {
     CHECK("The substring should be truncated to the maximum length possible", sub.size == str.size - sub_offset);
     CHECK("The substring should have the correct length", sub.size == 6);
     CHECK("The substring be \"string\"", string_compare(sub, truth) == 0);
+    destroy_arena_allocator(&allocator);
 }
 
 TEST_CASE(substring_u16_3) {
@@ -416,6 +417,7 @@ TEST_CASE(substring_u16_3) {
     ConstStringU16 truth = convert_utf8_to_utf16(&allocator, SCu8(""));
     CHECK("The substring should be empty if the offset is greater than the source string", sub.size == 0);
     CHECK("The substring be \"\"", string_compare(sub, truth) == 0);
+    destroy_arena_allocator(&allocator);
 }
 
 TEST_CASE(substring_u32_1) {
@@ -442,6 +444,7 @@ TEST_CASE(substring_u32_2) {
     CHECK("The substring should be truncated to the maximum length possible", sub.size == str.size - sub_offset);
     CHECK("The substring should have the correct length", sub.size == 6);
     CHECK("The substring be \"string\"", string_compare(sub, truth) == 0);
+    destroy_arena_allocator(&allocator);
 }
 
 TEST_CASE(substring_u32_3) {
@@ -454,6 +457,7 @@ TEST_CASE(substring_u32_3) {
     ConstStringU32 truth = convert_utf8_to_utf32(&allocator, SCu8(""));
     CHECK("The substring should be empty if the offset is greater than the source string", sub.size == 0);
     CHECK("The substring be \"\"", string_compare(sub, truth) == 0);
+    destroy_arena_allocator(&allocator);
 }
 
 TEST_CASE(clear_string_1) {
