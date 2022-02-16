@@ -284,6 +284,9 @@ ConstStringU8 trim_begin(Allocator* allocator, ConstStringU8 str);
 ConstStringU8 trim_end(Allocator* allocator, ConstStringU8 str);
 ConstStringU8 trim_all(Allocator* allocator, ConstStringU8 str);
 
+ConstStringU8 replace(Allocator* allocator, Arena* temporary_arena, ConstStringU8 str, ConstStringU8 pattern,
+                      ConstStringU8 replacement);
+
 // ****************************************************************************
 //                            Inline Functions
 // ****************************************************************************

@@ -408,6 +408,19 @@ TEST_CASE(trim_all_2) {
     destroy_arena_allocator(&allocator);
 }
 
+TEST_CASE(replace_1) {
+    Allocator allocator = make_arena_allocator();
+    Arena temp_arena = make_arena();
+    ConstStringU8 str = SCu8("C:/this/is/a/path/with/unix/style");
+
+    ConstStringU8 replaced_str = replace(&allocator, &temp_arena, str, SCu8("/"), SCu8("\\"));
+    CHECK("The resulting string should have pattern replaced",
+          string_compare(replaced_str, SCu8("C:\\this\\is\\a\\path\\with\\unix\\style")) == 0);
+
+    destroy_arena(&temp_arena);
+    destroy_arena_allocator(&allocator);
+}
+
 SECTION(strings_manipulation) {
     RUN_TEST_CASE(string_comparison);
     RUN_TEST_CASE(string_comparison_u16);
@@ -456,4 +469,6 @@ SECTION(strings_manipulation) {
 
     RUN_TEST_CASE(trim_all_1);
     RUN_TEST_CASE(trim_all_2);
+
+    RUN_TEST_CASE(replace_1);
 }

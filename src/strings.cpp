@@ -1000,3 +1000,23 @@ ConstStringU8 trim_all(Allocator* allocator, ConstStringU8 str) {
 
     return trim_end(allocator, substring(str, new_start));
 }
+
+ConstStringU8 replace(Allocator* allocator, Arena* temporary_arena, ConstStringU8 str, ConstStringU8 pattern,
+                      ConstStringU8 replacement) {
+    StringBuilder builder = make_string_builder(temporary_arena);
+
+    i64 old_result = 0;
+    i64 find_result = find_next(str, pattern);
+    while (find_result != -1) {
+        format_to(&builder, "%.*s", expand_string(substring(str, old_result, find_result - old_result)));
+        format_to(&builder, "%.*s", expand_string(replacement));
+        old_result = find_result + pattern.size;
+        find_result = find_next(str, pattern, old_result);
+    }
+
+    format_to(&builder, "%.*s", expand_string(substring(str, old_result)));
+
+    ConstStringU8 result = build(allocator, &builder);
+    destroy_string_builder(&builder);
+    return result;
+}
