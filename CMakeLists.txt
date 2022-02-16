@@ -29,7 +29,9 @@ endif()
 
 add_subdirectory(include/reborn)
 add_subdirectory(src)
-add_subdirectory(executable)
 
-#Tests
+# Playground
+add_subdirectory(playground)
+
+# Tests
 add_subdirectory(tests)
