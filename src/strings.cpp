@@ -912,6 +912,10 @@ ConstStringU8List split_string(Allocator* allocator, ConstStringU8 str, ConstStr
     if (str.size == 0) return {0};
 
     ConstStringU8List result = {0};
+    if (separator.size == 0) {
+        push_const_string_list_node(allocator, &result, str);
+        return result;
+    }
 
     i64 old_result = 0;
     i64 find_result = find_next(str, separator);
@@ -1020,3 +1024,5 @@ ConstStringU8 replace(Allocator* allocator, Arena* temporary_arena, ConstStringU
     destroy_string_builder(&builder);
     return result;
 }
+
+bool contains(ConstStringU8 str, ConstStringU8 pattern) { return find_first(str, pattern) != -1; }

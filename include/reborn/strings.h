@@ -16,7 +16,7 @@
 //                                    Macros
 // ****************************************************************************
 
-#define expand_string(str) (int)(str.size), (str.data)
+#define expand_string(str) (int)((str).size), ((str).data)
 #define SCu8(raw_str)                                                                                                  \
     ConstStringU8 { (raw_str), (sizeof(raw_str) / sizeof(*(raw_str))) - 1 }
 
@@ -286,6 +286,7 @@ ConstStringU8 trim_all(Allocator* allocator, ConstStringU8 str);
 
 ConstStringU8 replace(Allocator* allocator, Arena* temporary_arena, ConstStringU8 str, ConstStringU8 pattern,
                       ConstStringU8 replacement);
+bool contains(ConstStringU8 str, ConstStringU8 pattern);
 
 // ****************************************************************************
 //                            Inline Functions

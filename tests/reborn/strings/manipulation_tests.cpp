@@ -421,6 +421,17 @@ TEST_CASE(replace_1) {
     destroy_arena_allocator(&allocator);
 }
 
+TEST_CASE(contains_1) {
+    ConstStringU8 str = SCu8("I'm a string with some words !");
+    CHECK("The string \"string\" should be found", contains(str, SCu8("string")));
+    CHECK("The string \"dog\" should not be found", !contains(str, SCu8("dog")));
+}
+
+TEST_CASE(contains_2) {
+    ConstStringU8 str = SCu8("I'm a string with some words !");
+    CHECK("The string \"\" should be found", contains(str, SCu8("")));
+}
+
 SECTION(strings_manipulation) {
     RUN_TEST_CASE(string_comparison);
     RUN_TEST_CASE(string_comparison_u16);
@@ -471,4 +482,7 @@ SECTION(strings_manipulation) {
     RUN_TEST_CASE(trim_all_2);
 
     RUN_TEST_CASE(replace_1);
+
+    RUN_TEST_CASE(contains_1);
+    RUN_TEST_CASE(contains_2);
 }
