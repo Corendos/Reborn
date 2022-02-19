@@ -7,8 +7,8 @@
 #include <reborn/memory.h>
 #include <reborn/strings.h>
 
-#include <cassert>
-#include <cstring>
+#include <assert.h>
+#include <string.h>
 
 TEST_CASE(string_comparison) {
     StringU8 str1 = make_string("a");

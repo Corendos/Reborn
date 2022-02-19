@@ -1,0 +1,8 @@
+name: 'Setup MSVC'
+description: 'Set environment variable required to be able to use MSVC'
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        & "$env:GITHUB_ACTION_PATH\scripts\setup.ps1"
+      shell: pwsh

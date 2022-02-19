@@ -10,7 +10,7 @@
 #include <reborn/memory.h>
 #include <reborn/types.h>
 
-#include <cstdarg>
+#include <stdarg.h>
 
 // ****************************************************************************
 //                                    Macros

@@ -7,8 +7,8 @@
 #include <reborn/memory.h>
 #include <reborn/strings.h>
 
-#include <cassert>
-#include <cstring>
+#include <assert.h>
+#include <string.h>
 
 TEST_CASE(utf8_internal_validation) {
     char length1_start = 0b01110100;

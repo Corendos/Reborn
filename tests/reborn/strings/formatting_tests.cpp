@@ -7,8 +7,8 @@
 #include <reborn/memory.h>
 #include <reborn/strings.h>
 
-#include <cassert>
-#include <cstring>
+#include <assert.h>
+#include <string.h>
 
 TEST_CASE(string_write_to_1) {
     Allocator allocator = make_arena_allocator();

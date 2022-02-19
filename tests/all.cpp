@@ -6,7 +6,7 @@
 
 #include "tests.h"
 
-#include <cstdio>
+#include <stdio.h>
 
 #include "reborn/all.cpp"
 

@@ -1,0 +1,19 @@
+name: Main
+on: push
+jobs:
+  test-msvc:
+    name: Build and Test on Windows
+    runs-on: windows-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v2
+      - name: Configure project
+        id: configure-msvc
+        run: |
+          cmake -Bcmake-build -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl .
+      - name: Build project
+        id: build-msvc
+        run: cmake --build cmake-build --config Release --target ALL_BUILD --parallel
+      - name: Run tests
+        id: test-msvc
+        run: .\bin\tests\Release\reborn_tests.exe

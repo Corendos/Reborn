@@ -9,10 +9,10 @@
 
 #include <reborn/types.h>
 
-#include <cassert>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define GREEN_OUTPUT                                                                                                   \
     "\x1b\x5b"                                                                                                         \

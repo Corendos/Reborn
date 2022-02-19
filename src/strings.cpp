@@ -8,8 +8,8 @@
 #include <reborn/memory.h>
 #include <reborn/strings.h>
 
-#include <cstdio>
-#include <cstring>
+#include <stdio.h>
+#include <string.h>
 
 StringU8 make_string(char* str, u64 size) { return StringU8{str, size, size}; }
 

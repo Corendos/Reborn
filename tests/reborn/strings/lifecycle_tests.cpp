@@ -7,8 +7,8 @@
 #include <reborn/memory.h>
 #include <reborn/strings.h>
 
-#include <cassert>
-#include <cstring>
+#include <assert.h>
+#include <string.h>
 
 TEST_CASE(make_string_1) {
     char raw_str[] = "This is a string";
