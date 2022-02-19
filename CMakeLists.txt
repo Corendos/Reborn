@@ -30,8 +30,10 @@ endif()
 add_subdirectory(include/reborn)
 add_subdirectory(src)
 
-# Playground
-add_subdirectory(playground)
+# (Optional) Playground for local tests
+if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/playground)
+	add_subdirectory(playground)
+endif()
 
 # Tests
 add_subdirectory(tests)
