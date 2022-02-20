@@ -4,11 +4,10 @@
  * More details a https://github.com/Corendos/Reborn
  */
 
+#include <reborn/io.h>
 #include <reborn/memory/allocator/arena.h>
 #include <reborn/memory/buffer.h>
 #include <reborn/strings.h>
-
-#include <stdio.h>
 
 ConstBuffer make_const_buffer(const u8* data, u64 size) { return ConstBuffer{data, size}; }
 
@@ -49,7 +48,7 @@ void print_buffer_hex(ConstBuffer buffer, Arena* temporary_arena) {
     Allocator temp = make_temporary_arena_allocator(temporary_arena);
     ConstStringU8 str = build(&temp, &builder);
 
-    printf("%.*s\n", expand_string(str));
+    println("%.*s", expand_string(str));
 
     destroy_arena_allocator(&temp);
     destroy_string_builder(&builder);

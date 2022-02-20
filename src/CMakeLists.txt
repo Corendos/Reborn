@@ -4,7 +4,7 @@
 # More details a https://github.com/Corendos/Reborn
 #
 
-target_sources(libreborn PRIVATE strings.cpp iterator.cpp)
+target_sources(libreborn PRIVATE strings.cpp iterator.cpp io.cpp)
 
 add_subdirectory(concurrency)
 add_subdirectory(filesystem)

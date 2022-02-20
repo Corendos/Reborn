@@ -9,8 +9,6 @@
 
 #include <windows.h>
 
-#include <stdio.h>
-
 internal inl DWORD translate_file_access_mode(FileAccessMode access_mode) {
     DWORD result = 0;
     if (access_mode & FileAccessMode_Read) result |= GENERIC_READ;

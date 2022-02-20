@@ -8,7 +8,7 @@
 #include <reborn/memory.h>
 #include <reborn/strings.h>
 
-#include <stdio.h>
+#include <stb_sprintf.h>
 
 StringU8 make_string(char* str, u64 size) { return StringU8{str, size, size}; }
 
@@ -433,7 +433,7 @@ FormatResult format_to(StringU8* str, const char* format, ...) {
 FormatResult format_to_v(StringU8* str, const char* format, va_list args) {
     // NOTE(Corentin): the string is allocated to have an extra '\0' at the end
     u64 remaining = str->capacity - str->size + 1;
-    i64 required = (i64)vsnprintf(str->data + str->size, remaining, format, args);
+    i64 required = (i64)stbsp_vsnprintf(str->data + str->size, remaining, format, args);
     if (required < remaining) {
         str->size += required;
         return FormatResult{required, true};
@@ -443,7 +443,7 @@ FormatResult format_to_v(StringU8* str, const char* format, va_list args) {
     return FormatResult{required, false};
 }
 
-i64 required_for_format(const char* format, va_list args) { return (i64)vsnprintf(0, 0, format, args); }
+i64 required_for_format(const char* format, va_list args) { return (i64)stbsp_vsnprintf(0, 0, format, args); }
 
 StringBuilder make_string_builder(Arena* temporary) {
     StringBuilder builder = {0};

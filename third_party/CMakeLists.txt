@@ -1,0 +1,2 @@
+add_library(stb_sprintf INTERFACE)
+target_include_directories(stb_sprintf INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})

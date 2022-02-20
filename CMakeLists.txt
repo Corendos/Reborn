@@ -13,11 +13,14 @@ else()
     message(FATAL_ERROR "Missing platform defines for platform \"${CMAKE_SYSTEM_NAME}\"")
 endif()
 
+add_subdirectory(third_party)
+
 #Actual library definition
 add_library(libreborn)
 
 target_include_directories(libreborn PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_compile_definitions(libreborn PRIVATE ${PLATFORM_DEFINES})
+target_link_libraries(libreborn PRIVATE stb_sprintf)
 
 set_target_properties(libreborn PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
