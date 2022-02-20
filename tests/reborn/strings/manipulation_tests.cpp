@@ -8,7 +8,6 @@
 #include <reborn/strings.h>
 
 #include <assert.h>
-#include <string.h>
 
 TEST_CASE(string_comparison) {
     StringU8 str1 = make_string("a");

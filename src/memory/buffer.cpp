@@ -9,7 +9,6 @@
 #include <reborn/strings.h>
 
 #include <stdio.h>
-#include <string.h>
 
 ConstBuffer make_const_buffer(const u8* data, u64 size) { return ConstBuffer{data, size}; }
 
@@ -27,7 +26,7 @@ Buffer copy_buffer(Allocator* allocator, ConstBuffer source) {
 
 bool copy_buffer(Buffer* dest, ConstBuffer source) {
     if (dest->capacity - dest->size < source.size) return false;
-    memcpy(dest->data + dest->size, source.data, source.size);
+    memory_copy(source.data, dest->data + dest->size, source.size);
     dest->size += source.size;
     return true;
 }

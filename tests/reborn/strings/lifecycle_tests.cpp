@@ -8,7 +8,6 @@
 #include <reborn/strings.h>
 
 #include <assert.h>
-#include <string.h>
 
 TEST_CASE(make_string_1) {
     char raw_str[] = "This is a string";

@@ -8,7 +8,6 @@
 #include <reborn/strings.h>
 
 #include <assert.h>
-#include <string.h>
 
 TEST_CASE(utf8_internal_validation) {
     char length1_start = 0b01110100;

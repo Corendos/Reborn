@@ -9,11 +9,10 @@
 #include <reborn/strings.h>
 
 #include <stdio.h>
-#include <string.h>
 
 StringU8 make_string(char* str, u64 size) { return StringU8{str, size, size}; }
 
-StringU8 make_string(char* str) { return make_string(str, (u64)strlen(str)); }
+StringU8 make_string(char* str) { return make_string(str, string_length(str)); }
 
 StringU16 make_string(u16* str, u64 size, Utf16Type type) { return StringU16{str, size, size, type}; }
 
@@ -25,7 +24,7 @@ StringU32 make_string(u32* str) { return make_string(str, string_length(str)); }
 
 ConstStringU8 make_const_string(const char* str, u64 size) { return ConstStringU8{str, size}; }
 
-ConstStringU8 make_const_string(const char* str) { return make_const_string(str, (u64)strlen(str)); }
+ConstStringU8 make_const_string(const char* str) { return make_const_string(str, string_length(str)); }
 
 ConstStringU8 make_const_string(StringU8 source) { return make_const_string(source.data, source.size); }
 
@@ -54,12 +53,14 @@ StringU8 push_string_u8(Allocator* allocator, const char* str, u64 size) {
     string.size = size;
     string.capacity = size;
     string.data = (char*)allocate(allocator, size + 1);
-    memcpy(string.data, str, size);
+    memory_copy(str, string.data, size);
     string.data[size] = '\0';
     return string;
 }
 
-StringU8 push_string_u8(Allocator* allocator, const char* str) { return push_string_u8(allocator, str, strlen(str)); }
+StringU8 push_string_u8(Allocator* allocator, const char* str) {
+    return push_string_u8(allocator, str, string_length(str));
+}
 
 StringU8 push_string_u8(Allocator* allocator, u64 size) {
     StringU8 string = {0};
@@ -76,7 +77,7 @@ StringU16 push_string_u16(Allocator* allocator, const u16* str, u64 size, Utf16T
     string.capacity = size;
     string.type = type;
     string.data = (u16*)allocate(allocator, (size + 1) * sizeof(u16));
-    memcpy(string.data, str, size * sizeof(u16));
+    memory_copy(str, string.data, size * sizeof(u16));
     string.data[size] = 0;
     return string;
 }
@@ -100,7 +101,7 @@ StringU32 push_string_u32(Allocator* allocator, const u32* str, u64 size) {
     string.size = size;
     string.capacity = size;
     string.data = (u32*)allocate(allocator, (size + 1) * sizeof(u32));
-    memcpy(string.data, str, size * sizeof(u32));
+    memory_copy(str, string.data, size * sizeof(u32));
     string.data[size] = 0;
     return string;
 }
@@ -122,14 +123,14 @@ ConstStringU8 push_const_string(Allocator* allocator, const char* str, u64 size)
     ConstStringU8 string = {0};
     string.size = size;
     char* data = (char*)allocate(allocator, size + 1);
-    memcpy(data, str, size);
+    memory_copy(str, data, size);
     data[size] = '\0';
     string.data = data;
     return string;
 }
 
 ConstStringU8 push_const_string(Allocator* allocator, const char* str) {
-    return push_const_string(allocator, str, strlen(str));
+    return push_const_string(allocator, str, string_length(str));
 }
 
 ConstStringU16 push_const_string(Allocator* allocator, const u16* str, u64 size, Utf16Type type) {
@@ -137,7 +138,7 @@ ConstStringU16 push_const_string(Allocator* allocator, const u16* str, u64 size,
     string.size = size;
     string.type = type;
     u16* data = (u16*)allocate(allocator, (size + 1) * sizeof(u16));
-    memcpy(data, str, size * sizeof(u16));
+    memory_copy(str, data, size * sizeof(u16));
     data[size] = 0;
     string.data = data;
     return string;
@@ -151,7 +152,7 @@ ConstStringU32 push_const_string(Allocator* allocator, const u32* str, u64 size)
     ConstStringU32 string = {0};
     string.size = size;
     u32* data = (u32*)allocate(allocator, (size + 1) * sizeof(u32));
-    memcpy(data, str, size * sizeof(u32));
+    memory_copy(str, data, size * sizeof(u32));
     data[size] = 0;
     string.data = data;
     return string;
@@ -225,7 +226,7 @@ ConstStringU8ListNode* _push_const_string_list_node(Allocator* allocator, ConstS
     node->prev = 0;
 
     char* data = (char*)(storage + sizeof(ConstStringU8ListNode));
-    memcpy(data, other.data, other.size);
+    memory_copy(other.data, data, other.size);
     data[other.size] = 0;
 
     node->string = make_const_string(data, other.size);
@@ -244,10 +245,10 @@ void clear_string(StringU16* str) { str->size = 0; }
 
 void clear_string(StringU32* str) { str->size = 0; }
 
-// TODO(Corentin): This is not actually correct, make the difference between raw compare and
-// codepoint compare
 i32 string_compare(ConstStringU8 a, ConstStringU8 b) {
-    return strncmp(a.data, b.data, a.size < b.size ? a.size : b.size);
+    i32 sub_result = memory_compare(a.data, b.data, min(a.size, b.size));
+    if (sub_result != 0 || a.size == b.size) return sub_result;
+    return a.size < b.size ? -1 : 1;
 }
 
 i32 string_compare(StringU8 a, StringU8 b) { return string_compare(make_const_string(a), make_const_string(b)); }
@@ -353,7 +354,7 @@ bool write_to(StringU8* str, StringU8 other) { return write_to(str, make_const_s
 
 bool write_to(StringU8* str, ConstStringU8 other) {
     if (str->size + other.size > str->capacity) return false;
-    memcpy(str->data + str->size, other.data, other.size);
+    memory_copy(other.data, str->data + str->size, other.size);
     str->size += other.size;
     return true;
 }
@@ -392,7 +393,7 @@ bool write_to(StringU16* str, ConstStringU16 other) {
     if (str->size + other.size > str->capacity) return false;
 
     if (str->type == other.type) {
-        memcpy(str->data + str->size * sizeof(u16), other.data, other.size * sizeof(u16));
+        memory_copy(other.data, str->data + str->size * sizeof(u16), other.size * sizeof(u16));
     } else {
         u64 index = 0;
         while (index < other.size) {
@@ -416,7 +417,7 @@ bool write_to(StringU32* str, StringU32 other) { return write_to(str, make_const
 
 bool write_to(StringU32* str, ConstStringU32 other) {
     if (str->size + other.size > str->capacity) return false;
-    memcpy(str->data + str->size * sizeof(u32), other.data, other.size * sizeof(u32));
+    memory_copy(other.data, str->data + str->size * sizeof(u32), other.size * sizeof(u32));
     str->size += other.size;
     return true;
 }
@@ -987,7 +988,7 @@ ConstStringU8 trim_end(Allocator* allocator, ConstStringU8 str) {
     u64 new_start_from_end = 0;
 
     while (new_start_from_end < str.size) {
-        if (str.data[str.size - new_start_from_end] != ' ') break;
+        if (str.data[str.size - new_start_from_end - 1] != ' ') break;
         new_start_from_end++;
     }
 

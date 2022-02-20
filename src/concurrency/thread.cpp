@@ -9,7 +9,7 @@
 Thread make_thread(ConstStringU8 name, u64 (*thread_fun)(void*), void* parameters) {
     Thread result = {0};
     char* data = (char*)malloc(name.size + 1);
-    result.name = make_string_from(data, name.size);
+    result.name = make_string_from(data, name.size + 1);
     write_to(&result.name, name);
     result.native_handle = _make_thread(name, thread_fun, parameters);
 
