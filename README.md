@@ -1,5 +1,5 @@
 # Reborn library
-
+[![Main](https://github.com/Corendos/Reborn/actions/workflows/main.yaml/badge.svg)](https://github.com/Corendos/Reborn/actions/workflows/main.yaml)
 ## Introduction
 This library main goal is to provide a standard library that is nicer to use than the default C/C++ one.
 
