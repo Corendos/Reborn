@@ -7,8 +7,6 @@
 #ifndef REBORN_TYPES_H
 #define REBORN_TYPES_H
 
-// TODO(Corentin): add preprocessor hell to not rely on CMake
-
 #if defined(_MSC_VER)
 
 #define COMPILER_CL 1

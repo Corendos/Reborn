@@ -6,6 +6,78 @@
 
 #include <reborn/memory.h>
 
+TEST_CASE(memory_compare_1) {
+    u8 data[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    u8 data_less[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 8};
+    u8 data_greater[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 10};
+
+    CONSTRAINT(array_size(data) == array_size(data_less));
+    CONSTRAINT(array_size(data) == array_size(data_greater));
+
+    CHECK("\"data\" should be equal to \"data\"", memory_compare(data, data, array_size(data)) == 0);
+    CHECK("\"data_less\" should be less than \"data\"", memory_compare(data_less, data, array_size(data)) < 0);
+    CHECK("\"data_greater\" should be greater than \"data\"", memory_compare(data_greater, data, array_size(data)) > 0);
+}
+
+TEST_CASE(memory_copy_1) {
+    u8 data1[128] = {0};
+    u8 data2[128] = {0};
+
+    CONSTRAINT(array_size(data1) == array_size(data2));
+
+    for (u64 i = 0; i < array_size(data1); ++i) {
+        data1[i] = i;
+    }
+
+    memory_copy(data1, data2, array_size(data1));
+    CHECK("The two buffer should be equal", memory_compare(data1, data2, array_size(data1)) == 0);
+}
+
+TEST_CASE(memory_copy_2) {
+    u8 truth[256] = {0};
+    u8 data[256] = {0};
+
+    CONSTRAINT(array_size(truth) == array_size(data));
+
+    for (u64 i = 0; i < array_size(data); ++i) {
+        data[i] = i;
+        truth[i] = i;
+    }
+
+    memory_copy(data, data + 64, 128);
+    CHECK("The copied part should be equal to the original source", memory_compare(data + 64, truth, 128) == 0);
+}
+
+TEST_CASE(memory_copy_3) {
+    u8 truth[256] = {0};
+    u8 data[256] = {0};
+
+    CONSTRAINT(array_size(truth) == array_size(data));
+
+    for (u64 i = 0; i < array_size(data); ++i) {
+        data[i] = i;
+        truth[i] = i;
+    }
+
+    memory_copy(data + 64, data, 128);
+    CHECK("The copied part should be equal to the original source", memory_compare(data, truth + 64, 128) == 0);
+}
+
+TEST_CASE(memory_set_1) {
+    u8 truth[256] = {0};
+    u8 data[256] = {0};
+
+    CONSTRAINT(array_size(truth) == array_size(data));
+
+    for (u64 i = 0; i < array_size(truth); ++i) {
+        truth[i] = 1;
+    }
+
+    memory_set(data, 1, array_size(data));
+
+    CHECK("The set buffer should contain the correct values", memory_compare(data, truth, array_size(data)) == 0);
+}
+
 TEST_CASE(make_cursor) {
     u8* data = (u8*)0xdeadbeef0000;
     u64 capacity = 128;
@@ -188,6 +260,14 @@ SECTION(allocator) {
 }
 
 SECTION(memory) {
+    RUN_TEST_CASE(memory_compare_1);
+
+    RUN_TEST_CASE(memory_copy_1);
+    RUN_TEST_CASE(memory_copy_2);
+    RUN_TEST_CASE(memory_copy_3);
+
+    RUN_TEST_CASE(memory_set_1);
+
     RUN_TEST_CASE(make_cursor);
     RUN_TEST_CASE(cursor_push_and_pop);
     RUN_TEST_CASE(cursor_temp);
