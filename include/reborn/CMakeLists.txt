@@ -8,3 +8,4 @@ target_sources(libreborn PRIVATE characters.h iterator.h strings.h memory.h type
 
 add_subdirectory(concurrency)
 add_subdirectory(format)
+add_subdirectory(time)

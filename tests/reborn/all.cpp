@@ -10,6 +10,7 @@
 #include "iterator_tests.cpp"
 #include "memory_tests.cpp"
 #include "strings/all.cpp"
+#include "time_tests.cpp"
 #include "types_tests.cpp"
 
 SECTION(reborn) {
@@ -20,4 +21,5 @@ SECTION(reborn) {
     RUN_SECTION(iterator);
     RUN_SECTION(concurrency);
     RUN_SECTION(filesystem);
+    RUN_SECTION(time);
 }
