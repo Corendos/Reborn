@@ -15,4 +15,6 @@ void println(const char* format, ...);
 void eprint(const char* format, ...);
 void eprintln(const char* format, ...);
 
+void set_separator(char comma, char period);
+
 #endif // IO_H

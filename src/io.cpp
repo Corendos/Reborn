@@ -61,3 +61,5 @@ void eprintln(const char* format, ...) {
     fputc('\n', stdout);
     va_end(args);
 }
+
+void set_separator(char comma, char period) { stbsp_set_separators(comma, period); }
