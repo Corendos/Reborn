@@ -171,9 +171,18 @@ typedef double f64;
         (list)->count++;                                                                                               \
     } while (0)
 
-inline static bool is_power_of_two(u64 number) { return (number & (number - 1)) == 0; }
+#define internal static
+#if defined(COMPILER_GCC) || defined(COMPILER_CLANG)
+#define inl __attribute__((__always_inline__))
+#elif defined(COMPILER_CL)
+#define inl __forceinline
+#else
+#endif
+#define internal static
 
-inline static u64 align_to(u64 value, u8 alignment) {
+inl bool is_power_of_two(u64 number) { return (number & (number - 1)) == 0; }
+
+inl u64 align_to(u64 value, u16 alignment) {
     if (value != 0) {
         u64 temp = value - 1;
         return temp - (temp % alignment) + alignment;
@@ -181,7 +190,7 @@ inline static u64 align_to(u64 value, u8 alignment) {
     return 0;
 }
 
-inline static bool is_aligned_to(u64 value, u8 alignment) { return value % alignment == 0; }
+inl bool is_aligned_to(u64 value, u16 alignment) { return value % alignment == 0; }
 
 #define _STRINGIFY(s) #s
 #define STRINGIFY(s)  _STRINGIFY(s)
@@ -201,20 +210,13 @@ inline static bool is_aligned_to(u64 value, u8 alignment) { return value % align
 #define ASSERT(c)         ASSERT_ALWAYS(c)
 #define ASSERT_MESSAGE(m) ASSERT_MESSAGE_ALWAYS(m)
 #else
-#define ASSERT(c)
-#define ASSERT_MESSAGE(m)
+#define ASSERT(c)         (void)(c)
+#define ASSERT_MESSAGE(m) (void)(m)
 #endif
 
 #define CHECK_UNREACHABLE() ASSERT_MESSAGE("REACHED UNREACHABLE CODE")
 
-#define internal static
-#if defined(COMPILER_GCC) || defined(COMPILER_CLANG)
-#define inl __attribute__((__always_inline__))
-#elif defined(COMPILER_CL)
-#define inl __forceinline
-#else
-#endif
-#define internal static
+#define ENABLE_CUSTOM_MEMORY_FUNCTION 0
 
 #define DECLARE_ARRAY(name, type)                                                                                      \
     struct name {                                                                                                      \
