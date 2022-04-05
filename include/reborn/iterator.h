@@ -1,7 +1,7 @@
 /*
  * MIT Licence
  * Copyright (c) 2022 Corentin Godeau (@Corendos)
- * More details a https://github.com/Corendos/Reborn
+ * More details at https://github.com/Corendos/Reborn
  */
 
 #ifndef REBORN_ITERATOR_H
@@ -16,22 +16,22 @@ struct Iterator {
     u64 size;
 };
 
-Iterator make_iterator(const char* data, u64 size);
-Iterator make_iterator(StringU8* str);
-Iterator make_iterator(ConstStringU8* str);
+EXPORT Iterator make_iterator(const char* data, u64 size);
+EXPORT Iterator make_iterator(StringU8* str);
+EXPORT Iterator make_iterator(ConstStringU8* str);
 
-char peek(Iterator* it, u64 offset);
-char peek_or(Iterator* it, u64 offset, char _default);
+EXPORT char peek(Iterator* it, u64 offset);
+EXPORT char peek_or(Iterator* it, u64 offset, char _default);
 
-u64 get_position(Iterator* it);
+EXPORT u64 get_position(Iterator* it);
 
-bool is_valid(Iterator* it);
+EXPORT bool is_valid(Iterator* it);
 
-void skip_to(Iterator* it, char c);
-void skip_to_first_after(Iterator* it, char c);
-void skip_to_first_if(Iterator* it, bool (*predicate)(char));
+EXPORT void skip_to(Iterator* it, char c);
+EXPORT void skip_to_first_after(Iterator* it, char c);
+EXPORT void skip_to_first_if(Iterator* it, bool (*predicate)(char));
 
-u64 parse_u64(Iterator* it);
-u64 parse_u64(ConstStringU8* str);
+EXPORT u64 parse_u64(Iterator* it);
+EXPORT u64 parse_u64(ConstStringU8* str);
 
 #endif // REBORN_ITERATOR_H

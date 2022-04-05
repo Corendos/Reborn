@@ -1,7 +1,7 @@
 /*
  * MIT Licence
  * Copyright (c) 2022 Corentin Godeau (@Corendos)
- * More details a https://github.com/Corendos/Reborn
+ * More details at https://github.com/Corendos/Reborn
  */
 
 #ifndef REBORN_FILE_H
@@ -35,16 +35,16 @@ struct FileOpenResult {
     bool success;
 };
 
-FileOpenResult open_file(ConstStringU8 filename, FileAccessMode access_mode = FileAccessMode_Read,
-                         FileOpenOption options = FileOpenOption_OpenAlways);
-FileOpenResult open_file(ConstStringU16 filename, FileAccessMode access_mode = FileAccessMode_Read,
-                         FileOpenOption options = FileOpenOption_OpenAlways);
+EXPORT FileOpenResult open_file(ConstStringU8 filename, FileAccessMode access_mode = FileAccessMode_Read,
+                                FileOpenOption options = FileOpenOption_OpenAlways);
+EXPORT FileOpenResult open_file(ConstStringU16 filename, FileAccessMode access_mode = FileAccessMode_Read,
+                                FileOpenOption options = FileOpenOption_OpenAlways);
 
-void close_file(File* file);
+EXPORT void close_file(File* file);
 
-u64 get_file_size(File file);
+EXPORT u64 get_file_size(File file);
 
-Buffer read_entire_file(Allocator* allocator, File file);
-bool write_to_file(File file, ConstBuffer buffer);
+EXPORT Buffer read_entire_file(Allocator* allocator, File file);
+EXPORT bool write_to_file(File file, ConstBuffer buffer);
 
 #endif // REBORN_FILE_H

@@ -3,26 +3,26 @@
 
 #include <reborn/time/types.h>
 
-FloatingTimePoint convert_with_ratio(FloatingTimePoint t, Rational r);
-FloatingTimePoint convert_floating_to_ns(FloatingTimePoint t);
-FloatingTimePoint convert_floating_to_us(FloatingTimePoint t);
-FloatingTimePoint convert_floating_to_ms(FloatingTimePoint t);
-FloatingTimePoint convert_floating_to_s(FloatingTimePoint t);
+EXPORT FloatingTimePoint convert_with_ratio(FloatingTimePoint t, Rational r);
+EXPORT FloatingTimePoint convert_floating_to_ns(FloatingTimePoint t);
+EXPORT FloatingTimePoint convert_floating_to_us(FloatingTimePoint t);
+EXPORT FloatingTimePoint convert_floating_to_ms(FloatingTimePoint t);
+EXPORT FloatingTimePoint convert_floating_to_s(FloatingTimePoint t);
 
-FloatingTimePoint get_floating_time_ns();
-FloatingTimePoint get_floating_time_us();
-FloatingTimePoint get_floating_time_ms();
-FloatingTimePoint get_floating_time_s();
+EXPORT FloatingTimePoint get_floating_time_ns();
+EXPORT FloatingTimePoint get_floating_time_us();
+EXPORT FloatingTimePoint get_floating_time_ms();
+EXPORT FloatingTimePoint get_floating_time_s();
 
-TimePoint convert_with_ratio(TimePoint t, Rational r);
-TimePoint convert_to_ns(TimePoint t);
-TimePoint convert_to_us(TimePoint t);
-TimePoint convert_to_ms(TimePoint t);
-TimePoint convert_to_s(TimePoint t);
+EXPORT TimePoint convert_with_ratio(TimePoint t, Rational r);
+EXPORT TimePoint convert_to_ns(TimePoint t);
+EXPORT TimePoint convert_to_us(TimePoint t);
+EXPORT TimePoint convert_to_ms(TimePoint t);
+EXPORT TimePoint convert_to_s(TimePoint t);
 
-TimePoint get_time_ns();
-TimePoint get_time_us();
-TimePoint get_time_ms();
-TimePoint get_time_s();
+EXPORT TimePoint get_time_ns();
+EXPORT TimePoint get_time_us();
+EXPORT TimePoint get_time_ms();
+EXPORT TimePoint get_time_s();
 
 #endif // REBORN_TIME_CLOCK_H

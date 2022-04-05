@@ -1,14 +1,14 @@
 #
 # MIT Licence
 # Copyright (c) 2022 Corentin Godeau (@Corendos)
-# More details a https://github.com/Corendos/Reborn
+# More details at https://github.com/Corendos/Reborn
 #
 
 add_executable(reborn_tests)
 
 target_sources(reborn_tests PRIVATE all.cpp)
 target_compile_definitions(reborn_tests PRIVATE ${PLATFORM_DEFINES})
-target_link_libraries(reborn_tests PRIVATE libreborn)
+target_link_libraries(reborn_tests PRIVATE libreborn_static)
 
 set_target_properties(reborn_tests PROPERTIES
                                  RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/tests

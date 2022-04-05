@@ -1,7 +1,7 @@
 /*
  * MIT Licence
  * Copyright (c) 2022 Corentin Godeau (@Corendos)
- * More details a https://github.com/Corendos/Reborn
+ * More details at https://github.com/Corendos/Reborn
  */
 
 #ifndef REBORN_MEMORY_ARENA_H
@@ -40,22 +40,22 @@ struct TemporaryArena {
     u64 pos;
 };
 
-Cursor make_cursor(u8* data, u64 capacity);
+EXPORT Cursor make_cursor(u8* data, u64 capacity);
 
-void* linear_allocation_push(Cursor* cursor, u64 size);
-void linear_allocation_pop(Cursor* cursor, u64 size);
-TemporaryCursor linear_allocation_begin_temp(Cursor* cursor);
-void linear_allocation_end_temp(TemporaryCursor* temporary);
+EXPORT void* linear_allocation_push(Cursor* cursor, u64 size);
+EXPORT void linear_allocation_pop(Cursor* cursor, u64 size);
+EXPORT TemporaryCursor linear_allocation_begin_temp(Cursor* cursor);
+EXPORT void linear_allocation_end_temp(TemporaryCursor* temporary);
 
-Arena make_arena(u64 node_size, u8 alignment);
-Arena make_arena(u64 node_size);
-Arena make_arena();
-void destroy_arena(Arena* arena);
-void reset_arena(Arena* arena);
+EXPORT Arena make_arena(u64 node_size, u8 alignment);
+EXPORT Arena make_arena(u64 node_size);
+EXPORT Arena make_arena();
+EXPORT void destroy_arena(Arena* arena);
+EXPORT void reset_arena(Arena* arena);
 
-void* linear_allocation_push(Arena* arena, u64 size);
-void linear_allocation_pop(Arena* arena, u64 size);
-TemporaryArena linear_allocation_begin_temp(Arena* arena);
-void linear_allocation_end_temp(TemporaryArena* temporary);
+EXPORT void* linear_allocation_push(Arena* arena, u64 size);
+EXPORT void linear_allocation_pop(Arena* arena, u64 size);
+EXPORT TemporaryArena linear_allocation_begin_temp(Arena* arena);
+EXPORT void linear_allocation_end_temp(TemporaryArena* temporary);
 
 #endif // REBORN_MEMORY_ARENA_H

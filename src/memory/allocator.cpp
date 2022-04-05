@@ -1,12 +1,12 @@
 /*
  * MIT Licence
  * Copyright (c) 2022 Corentin Godeau (@Corendos)
- * More details a https://github.com/Corendos/Reborn
+ * More details at https://github.com/Corendos/Reborn
  */
 
 #include <reborn/memory/allocator.h>
 
-void* allocate(Allocator* allocator, u64 size) {
+void* _allocate(Allocator* allocator, u64 size, const char* location) {
     if (allocator->allocate_func == 0 || allocator->user_data == 0) return 0;
     return allocator->allocate_func(size, 0, allocator->user_data);
 }

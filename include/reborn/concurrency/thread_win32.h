@@ -1,7 +1,7 @@
 /*
  * MIT Licence
  * Copyright (c) 2022 Corentin Godeau (@Corendos)
- * More details a https://github.com/Corendos/Reborn
+ * More details at https://github.com/Corendos/Reborn
  */
 
 #ifndef REBORN_CONCURRENCY_THREAD_WIN32_H

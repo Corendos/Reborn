@@ -1,7 +1,7 @@
 /*
  * MIT Licence
  * Copyright (c) 2022 Corentin Godeau (@Corendos)
- * More details a https://github.com/Corendos/Reborn
+ * More details at https://github.com/Corendos/Reborn
  */
 
 #ifndef REBORN_MEMORY_ALLOCATOR_H
@@ -15,7 +15,9 @@ struct Allocator {
     void* user_data;
 };
 
-void* allocate(Allocator* allocator, u64 size);
-void free(Allocator* allocator, void* data);
+EXPORT void* _allocate(Allocator* allocator, u64 size, const char* location);
+EXPORT void free(Allocator* allocator, void* data);
+
+#define allocate(allocator, size) _allocate((allocator), (size), __FILE_AND_LINE__)
 
 #endif // REBORN_MEMORY_ALLOCATOR_H

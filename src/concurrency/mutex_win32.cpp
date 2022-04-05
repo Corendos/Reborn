@@ -1,23 +1,23 @@
 /*
  * MIT Licence
  * Copyright (c) 2022 Corentin Godeau (@Corendos)
- * More details a https://github.com/Corendos/Reborn
+ * More details at https://github.com/Corendos/Reborn
  */
 
-#include <reborn/concurrency/mutex_win32.h>
+#include <reborn/concurrency/mutex.h>
 
-NativeMutex _make_mutex() {
-    NativeMutex m = {0};
+Mutex make_mutex() {
+    Mutex mutex = {0};
 
-    InitializeCriticalSection(&m.cs);
+    InitializeCriticalSection(&mutex.native_handle.cs);
 
-    return m;
+    return mutex;
 }
 
-void _delete_mutex(NativeMutex* mutex) { DeleteCriticalSection(&mutex->cs); }
+void delete_mutex(Mutex* mutex) { DeleteCriticalSection(&mutex->native_handle.cs); }
 
-void _acquire_mutex(NativeMutex* mutex) { EnterCriticalSection(&mutex->cs); }
+void acquire_mutex(Mutex* mutex) { EnterCriticalSection(&mutex->native_handle.cs); }
 
-bool _try_acquire_mutex(NativeMutex* mutex) { return TryEnterCriticalSection(&mutex->cs) != 0; }
+bool try_acquire_mutex(Mutex* mutex) { return TryEnterCriticalSection(&mutex->native_handle.cs) != 0; }
 
-void _release_mutex(NativeMutex* mutex) { LeaveCriticalSection(&mutex->cs); }
+void release_mutex(Mutex* mutex) { LeaveCriticalSection(&mutex->native_handle.cs); }

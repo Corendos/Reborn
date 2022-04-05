@@ -1,7 +1,7 @@
 /*
  * MIT Licence
  * Copyright (c) 2022 Corentin Godeau (@Corendos)
- * More details a https://github.com/Corendos/Reborn
+ * More details at https://github.com/Corendos/Reborn
  */
 
 #ifndef REBORN_TYPES_H
@@ -86,6 +86,7 @@
 #endif
 
 #if defined(OS_WINDOWS)
+#define EXPORT __declspec(dllexport)
 
 #if defined(ARCH_X86)
 typedef unsigned long long int u64;
@@ -192,10 +193,11 @@ inl u64 align_to(u64 value, u16 alignment) {
 
 inl bool is_aligned_to(u64 value, u16 alignment) { return value % alignment == 0; }
 
-#define _STRINGIFY(s) #s
-#define STRINGIFY(s)  _STRINGIFY(s)
-#define GLUE_(x, y)   x##y
-#define CONCAT(x, y)  GLUE_(x, y)
+#define _STRINGIFY(s)     #s
+#define STRINGIFY(s)      _STRINGIFY(s)
+#define GLUE_(x, y)       x##y
+#define CONCAT(x, y)      GLUE_(x, y)
+#define __FILE_AND_LINE__ CONCAT(__FILE__, CONCAT(STRINGIFY( : L), STRINGIFY(__LINE__)))
 
 #define STATEMENT(s)                                                                                                   \
     do {                                                                                                               \
@@ -248,4 +250,10 @@ DECLARE_ARRAY(ArrayI64, i64);
 
 DECLARE_LIST(ListU64, u64);
 DECLARE_LIST(ListI64, i64);
+
+#define DECLARE_RESULT(name, type, value_name)                                                                         \
+    struct CONCAT(name, Result) {                                                                                      \
+        bool valid;                                                                                                    \
+        type value_name;                                                                                               \
+    }
 #endif // REBORN_TYPES_H
