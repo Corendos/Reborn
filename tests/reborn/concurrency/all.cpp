@@ -5,9 +5,11 @@
  */
 
 #include "mutex_tests.cpp"
+#include "condition_variable_tests.cpp"
 #include "thread_tests.cpp"
 
 SECTION(concurrency) {
     RUN_SECTION(thread);
+    RUN_SECTION(condition_variable);
     RUN_SECTION(mutex);
 }

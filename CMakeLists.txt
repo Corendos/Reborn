@@ -31,6 +31,7 @@ if (CMAKE_SYSTEM_NAME MATCHES "Windows")
 	list(APPEND REBORN_SRCS
 				src/concurrency/mutex_win32.cpp
 				src/concurrency/thread_win32.cpp
+				src/concurrency/condition_variable_win32.cpp
 				src/filesystem/file_win32.cpp
 				src/filesystem/paths_win32.cpp)
 else()
@@ -47,6 +48,7 @@ list(APPEND REBORN_HEADERS
 			include/reborn/strings.h
 			include/reborn/types.h
 			include/reborn/concurrency/mutex.h
+			include/reborn/concurrency/condition_variable.h
 			include/reborn/concurrency/thread.h
 			include/reborn/filesystem/file.h
 			include/reborn/filesystem/paths.h
@@ -58,6 +60,13 @@ list(APPEND REBORN_HEADERS
 			include/reborn/memory/allocator/arena.h
 			include/reborn/time/clock.h
 			include/reborn/time/types.h)
+
+if (CMAKE_SYSTEM_NAME MATCHES "Windows")
+	list(APPEND REBORN_HEADERS
+				include/reborn/concurrency/mutex_win32.h
+				include/reborn/concurrency/condition_variable_win32.h
+				include/reborn/concurrency/thread_win32.h)
+endif()
 
 # Object library declarations
 add_library(libreborn_objects OBJECT ${REBORN_SRCS} ${REBORN_HEADERS})
